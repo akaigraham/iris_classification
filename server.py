@@ -1,5 +1,3 @@
-# handle POST requests that we get from requests.py
-
 # import libraries
 import numpy as np 
 from flask import Flask, request, render_template
