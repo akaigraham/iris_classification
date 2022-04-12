@@ -44,10 +44,5 @@ test_acc = accuracy_score(y_test, test_preds)
 pickle.dump(clf, open('model.pkl', 'wb'))
 
 
-def classify(a,b,c,d):
-	arr = np.array([a,b,c,d]) # convert to numpy array
-	arr = arr.astype(np.float64) # change to float
-	query = arr.reshape(1, -1) # reshape the array
-	pred = clf.predict(query)
-	return target_names[pred]
+
 

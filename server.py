@@ -4,9 +4,13 @@
 import numpy as np 
 from flask import Flask, request, render_template
 import pickle 
+from sklearn import datasets
 
-# create instance of Flask() and load model into model
-app = Flask(__name__, template_folder='templates')
+iris = datasets.load_iris()
+target_names = list(iris.target_names)
+
+# create instance of Flask() and load model
+app = Flask(__name__)
 model = pickle.load(open('model.pkl', 'rb'))
 
 # default route set as home
@@ -14,21 +18,22 @@ model = pickle.load(open('model.pkl', 'rb'))
 def home():
 	return render_template('home.html') # render index.html
 
-@app.route('/classify', methods=['GET'])
-def classify_type():
-	try:
-		sepal_len = request.args.get('slen')
-		sepal_wid = request.args.get('swid')
-		petal_len = request.args.get('plen')
-		petal_wid = request.args.get('pwid')
+# classify input
+@app.route('/classify')
+def classify():
+	
+	# get entered values
+	slen = request.args.get('slen')
+	swid = request.args.get('swid')
+	plen = request.args.get('plen')
+	pwid = request.args.get('pwid')
 
-		# get output from classification model
-		variety = model.classify(sepal_len, sepal_wid, petal_len, petal_wid)
+	# run prediction
+	inputs = np.array([slen, swid, plen, pwid])
+	pred = model.predict(inputs.reshape(1,-1))
+	variety=target_names[pred[0]]
+	return render_template('output.html', variety=variety)
 
-		# render output in new HTML page
-		return render_template('output.html', variety=variety)
-	except:
-		return 'Error'
-
+# run the flask server
 if __name__ == '__main__':
-	app.run(port=5000, debug=True)
+	app.run(debug=True)
