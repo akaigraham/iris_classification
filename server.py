@@ -12,12 +12,12 @@ app = Flask(__name__)
 model = pickle.load(open('model.pkl', 'rb'))
 
 # default route set as home
-@app.route('/home')
+@app.route('/home', methods=['GET', 'POST'])
 def home():
 	return render_template('home.html') # render index.html
 
 # classify input
-@app.route('/classify')
+@app.route('/classify', methods=['GET', 'POST'])
 def classify():
 	
 	# get entered values
